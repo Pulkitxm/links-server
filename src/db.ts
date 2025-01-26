@@ -15,6 +15,13 @@ export async function connectToDatabase(DATABASE_URL: string) {
 export async function getLink(name: string) {
   return await linkModel.findOne({ name: name.toLowerCase() });
 }
+export async function getAllLinks() {
+  const links = await linkModel.find();
+  return links.map((link) => ({
+    name: link.name,
+    link: link.link,
+  }));
+}
 export async function addLink(link: {
   link: string;
   name: string;

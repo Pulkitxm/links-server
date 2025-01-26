@@ -1,14 +1,18 @@
 import express, { Request, Response } from "express";
 import { DATABASE_URL, LINKS_PASSWORD, PORT } from "./env";
-import { connectToDatabase, getLink } from "./db";
+import { connectToDatabase, getAllLinks, getLink } from "./db";
 
 function initApp() {
   const app = express();
 
-  app.get("/", async (req, res) => {
-    res.json({
-      message: "This is a URL shortener API from https://www.devpulkit.in",
-    });
+  app.get("/", async (req: Request, res: Response): Promise<any> => {
+    const { p: password } = req.query;
+    if (!password || password !== LINKS_PASSWORD)
+      res.json({
+        message: "This is a URL shortener API from https://www.devpulkit.in",
+      });
+    const links = await getAllLinks();
+    return res.json(links);
   });
 
   app.get("/:name", async (req: Request, res: Response): Promise<any> => {
